@@ -1,0 +1,395 @@
+%\documentclass[11pt,a4paper,uplatex,dvipdfmx]{ujarticle} 		% for uplatex
+\documentclass[11pt,a4j,dvipdfmx]{jarticle} 					% for platex
+\input{pieces/form00_header} % pieces
+\input{pieces/kakenhi7} % pieces
+\input{pieces/form01_header} % pieces
+\input{pieces/form02_2027_header} % pieces
+\input{pieces/hook3} % pieces
+%#Name: kiban_b
+\input{pieces/form04_jsps_headers} % pieces
+\input{pieces/form04_kiban_b_header} % pieces
+% ===== Global definitions for the Kakenhi form ======================
+%　基本情報
+%
+%------ 研究課題名  -------------------------------------------
+\newcommand{\研究課題名}{大量の脆弱性・攻撃手段・パッチの依存関係を考慮した証明付き修復計画の自動生成}
+
+%----- 研究機関名と研究代表者の氏名-----------------------
+\newcommand{\研究機関名}{電気通信大学}
+\newcommand{\研究代表者氏名}{田原 康之}
+\newcommand{\me}{\underline{\underline{Y.~Tahara}}} 
+%---- 研究期間の最終年度 ----------------
+\newcommand{\研究期間の最終元号年度}{12}  %令和で、半角数字のみ
+%========================================
+
+\input{pieces/inst_general_images} % pieces
+% user07_header
+% ===== my favorite packages ====================================
+% ここに、自分の使いたいパッケージを宣言して下さい。
+\usepackage{wrapfig}
+%\usepackage{amssymb}
+%\usepackage{mb}
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{lineno}
+\usepackage{multicol}
+%\usepackage{ulem}
+\usepackage{udline}
+\usepackage{url}
+\usepackage{here}
+%\usepackage{amssymb}
+%\usepackage{mb}
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{lineno}
+
+% ===== my personal definitions ==================================
+% ここに、自分のよく使う記号などを定義して下さい。
+\newcommand{\klpionn}{K_L \to \pi^0 \nu \overline{\nu}}
+\newcommand{\kppipnn}{K^+ \to \pi^+ \nu \overline{\nu}}
+
+% ----- 業績リスト用 -------------
+\newcommand{\paper}[6]{%
+	% paper{title}{authors}{journal}{vol}{pages}{year}
+	\item ``#1'', #2, #3 {\bf #4}, #5 (#6).			% お好みに合わせて変えてください。
+}
+
+\newcommand{\etal}{\textit{et al.\ }}
+\newcommand{\ca}[1]{*#1}	% corresponding author;   \ca{\yukawa}  みたいにして使う
+\newcommand{\invitedtalk}{招待講演}
+
+\newcommand{\yukawa}{H.~Yukawa}					% no underline
+%\newcommand{\yukawa}{\underline{\underline{H.~Yukawa}}}	% with 2 underlines
+\newcommand{\tomonaga}{S.~Tomonaga}
+
+\newcommand{\prl}{Phys.\ Rev.\ Lett.\ }		% よく使う雑誌も定義すると楽
+
+% ===== 欄外メモ ==================
+\newcommand{\memo}[1]{\marginpar{#1}}
+%\renewcommand{\memo}[1]{}	% 全てのメモを表示させないようにするには、行頭の"%"を消す
+
+\input{pieces/hook5} % pieces
+
+\begin{document}
+\input{pieces/hook7} % pieces
+%#Split: 01_purpose_plan  
+%#PieceName: p01_purpose_plan
+\input{pieces/p01_purpose_plan_00}
+\section{１　研究目的、研究方法など}
+%　　　　＜＜最大　5ページ＞＞
+
+%s02_purpose_plan_with_abstract
+%\JSPSInstructions		% <-- 留意事項。これは消すか、コメントアウトしてください。
+\noindent
+\textbf{（概要）}\\
+%begin 研究目的及び研究計画の概要空行付き ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+	\vspace*{10zw}	% （概要）と（本文）の間が10行程度になるよう、必要に応じて値を調整してください。	
+%end 研究目的及び研究計画の概要空行付き ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+\noindent
+\rule{\linewidth}{1pt}\\
+\noindent
+\textbf{（本文）}
+%begin 研究目的と研究計画	 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+\vspace*{-1\baselineskip}
+\begin{figure}[h]
+\centering
+%\includegraphics[width=0.7\textwidth]{figs/figure}
+\caption{本研究の概要}
+\label{fig:figure}
+\end{figure}
+
+\noindent\textbf{(1)本研究の学術的背景や本研究の着想に至った経緯、研究課題の核心をなす学術的「問い」}
+
+\textbf{[背景]} 近年の\ul{大規模言語モデル（LLM）}の急速な性能向上は，利便性と引き換えにセキュリティ上の重大な問題をもたらしつつある．たとえば最新版に近い LLM である Claude Mythos Preview は，既存のソフトウェアにおける数千件の高重大度脆弱性を，短時間で自動的に発見し，さらに攻撃コードまで作成したことが報告されている．加えて単独の脆弱性だけでなく，複数の軽微な脆弱性への連鎖的な攻撃により，重大なインシデントを誘発可能であることも実証された．
+
+これに対し現状では，セキュリティリスクを軽減させたモデルのみ公開するという，一時的な対策が取られている．ただし理想的には，すべての脆弱性を精査し，攻撃手段を確実に遮断するための修正コード，いわゆるパッチを作成して適用することが望ましいが，コスト的に非現実的である．そこで現実的には次の各課題を考慮した上で，対策を取る必要がある．
+\begin{enumerate}
+\item 脆弱性の重大度の多様さ：LLM が「発見した」とされる脆弱性は，実際には到達不能，あるいは既存の防御で無害なため，修正が不要なものもある．また深刻度が高くても外部から到達困難な脆弱性より，評価上は中程度でも実際に悪用される可能性が高いものを先に修正すべき場合がある．さらにそもそも脆弱ではない箇所をご検出することも多い．このような脆弱性の修正の要不要の判断，および優先順位付けを行う必要がある．
+
+\item 連鎖的攻撃への対応：連鎖的攻撃に対しては，関係する個々の脆弱性を修正するだけでなく，一部の脆弱性の修正で連鎖を遮断できる場合や，逆に連鎖における後続の脆弱性と攻撃にも対応が必要な場合の考慮が必要である．
+
+\item パッチの正しさの保証：パッチは脆弱性を塞ぐだけでなく、既存機能、性能、OS や外部ライブラリなどとの互換性、および可用性を壊さないことまで要求される．またパッチが新たな脆弱性を生む可能性もある．これに対し，テストは既知の攻撃例を防げることは示せても、すべての変種や未知の経路が存在しないことまでは通常証明できない．
+\end{enumerate}
+このうち課題3については，セキュリティなどへの要求が満たされたかどうかを，数学的に厳密に定義し検証する\ul{形式手法}が知られている．そして LLM と形式手法の併用により，高信頼なプログラム修正を目指した研究も進められている．具体的には，LLM で生成したパッチに形式検証を適用し，不具合に関する情報を LLM に入力するというフィードバックループにより，最終的に正しいパッチを作成するという枠組みを用いている．しかし形式検証はテストに比べてコストがかかるため，大量な脆弱性への適用は非現実的である．
+
+\textbf{[本研究の着想に至った経緯]} 応募者はこれまでに下記の各技術に関する研究成果をこれまでに挙げている：ソフトウェア工学とそのセキュリティへの応用，形式検証技術，LLM 応用技術，および知識グラフ技術．特に LLM 応用技術については，成果として LLM 応用技術の基礎となる機械学習の分野で最高峰の学術論文誌 \ul{Machine Learning (impact factor=4.3)} に計12件の論文が採択されている．また形式検証技術については，成果として論文がソフトウェア工学分野で最高峰の学術論文誌 \ul{IEEE Transactions on Software Engineering (impact factor=6.28) に採択}され，その結果\ul{情報処理学会ソフトウェア工学研究会卓越研究賞を受賞}している．
+
+これらの研究を通じて，形式検証，LLM，および知識グラフの利用により，大量のソフトウェア脆弱性への対策を実現可能であるとの見通しを得た．
+
+このように前述の問題点の存在を認識し，各分野における研究組織の強みの活用を目指した結果，本研究の着想に至った次第である．
+
+\textbf{[問い]} そこで本研究では，大量の脆弱性と攻撃手段に対し，LLMと形式検証による修正パッチの生成において，どの脆弱性をどのような順序で修正すれば，コストとリスクの適切なバランスのもとで，重大な攻撃を確実に遮断できるか，という問いを立てる．そのために脆弱性のトリアージ（優先順序付け）と，脆弱性間，攻撃手段間，およびパッチ間の関係性も含め，判断根拠と修正の正しさを，理解容易な説明付きで与えることを目指す．具体的には次の各「問い」の解決を目指すものとする．
+
+\textbf{問い1：個別の脆弱性と攻撃手段に対し，重要度や到達可能性など各種の要因を，根拠追跡可能な形でトリアージできるか}
+
+既存のCVSS等では，脆弱性そのものの一般的な重大度は評価できるが，実環境での危険性は，当該コードが実際に実行されるか，外部入力からそのコードまで到達可能か，成功した場合に何が侵害されるか，などによって大きく変わる．そのため単なる優先順位付けではなく，たとえば「重大度Criticalだが、認証後の管理者しか到達できない」脆弱性と、「重大度Mediumだが、インターネットから認証なしで攻撃可能」な脆弱性のどちらを優先するべきか、という判断を形式化する必要がある．加えて判断根拠をどのように明確化するかも重要である．
+
+\textbf{問い2：連鎖的な攻撃に関わる複数の脆弱性間の関係に基づいて，それらのトリアージと適切な修正計画生成は可能か}
+
+連鎖的な攻撃への対応については，従来のトリアージのように単に脆弱性の間の優先順位だけではなく，脆弱性間の関係として，関わるコード間の呼び出し関係，攻撃の実行順序，あるいは攻撃による権限昇格の詳細なども考慮しなければならない．その上で適切な脆弱性の絞り込みや，修正順序も含めた修復計画の生成が必要である．
+
+\textbf{問い3：トリアージに基づいて選定された脆弱性に対するパッチを，可能な限り正しさが保証した上で確実に生成できるか}
+
+個別の脆弱性については，LLM と形式検証器とのフィードバックループにより，正しい修正パッチを作成する技術は確立されている．しかし LLM の信頼性の低さと，形式検証の計算コストの課題により，トリアージにより絞り込まれたとしても，なお大量の脆弱性をすべて修正するのは非現実的である．そのため，たとえば複数の類似した脆弱性については，1件修正できればそれらの脆弱性すべてを同様に低コストで修正する，などの対応が必要である．
+
+\textbf{問い4：複数パッチの関係性を明確にした上で，コストとリスクの適切なバランスの考慮の上で，重大な攻撃を確実に遮断するために必要な修復計画を生成できるか}
+
+複数のパッチ間には，修復計画を生成するために考慮すべき様々な関係性がある．たとえばあるパッチを適用するには別のパッチが必要であるという依存，複数パッチを同時には適用できないという競合，あるパッチを適用すれば別のパッチが不要になるという包摂，そして1つのパッチで複数脆弱性を修正する効果の共有などがある．このような関係性を明確にした上で，コストとリスクを可能な限り正確に算出して，適切なバランスを考慮する必要がある．
+
+\textbf{問い5：自動生成されたトリアージ・パッチ・修復計画について，人間が理解容易な根拠を提示できるか}
+
+問い1〜4への対応により，トリアージ・パッチ・修復計画が，明確な根拠のもとで得られるが，その根拠の多くの部分は，LLM や検証器が内部で扱う形でしか得られない．そのためたとえばユーザが根拠について自然言語で問い合わせた際に，自然言語と可視化された図などの表現により，ユーザが理解容易な回答が得られることが必要である．
+	
+\noindent\textbf{(2) 本研究の目的および学術的独自性と創造性}
+
+\textbf{[本研究の目的]} 本研究の目的は，複数脆弱性，複数の攻撃手段，及び複数パッチの依存関係を考慮した修復意思決定の基礎理論を確立し，脆弱性トリアージと証明付き自動修復を統合するオントロジー駆動型知識基盤を構築することである．具体的には，以下の4つの研究目標を達成する．
+\begin{description}
+\item[目標A：] 脆弱性，攻撃前提・効果，資産，ソフトウェア構成，観測時刻，情報源を統合するオントロジーを設計し，その上で複数脆弱性及び複数パッチの依存関係を表すトリアージパッチ知識グラフ（Triage and Remediation Knowledge Graph; TRKG）を構築する．
+
+\item[目標B：] 脆弱性の攻撃経路上の役割と文脈を反映し，結論から証拠まで逆追跡できる知識グラフ型トリアージ推論を確立する．
+
+\item[目標C：] トリアージパッチ知識グラフと，複数の類似した脆弱性を修正可能な「修正パターン」を用いて，証明付きパッチの効率的かつ高精度な生成を行う．
+
+\item[目標D：] トリアージパッチ知識グラフを用いて，すべての重大な攻撃経路を遮断することが検証可能な，最小かつ十分な修復計画を，説明可能な形で生成する．
+\end{description}
+
+\textbf{[学術的独自性]} 本研究の独自性は次の通りである．下記の (3) に示すように，前述した個別の研究目標を扱う研究は近年増加している．一方本研究は，LLM，オントロジー，および形式検証を統合したフレームワークに基づくことによる全研究目標の達成により，大量かつ相互に関連する脆弱性と攻撃手段に対し，正しさが保証された修正を，コストとリスクの適切なバランスの上で実現し，重大な攻撃を確実に遮断することを目指すものである．
+
+\textbf{[創造性]} 本研究の創造性は次の通りである．まずトリアージについて，個別脆弱性の重大度評価だけでなく，複数脆弱性が構成する攻撃経路上の役割も考慮して行う．次に攻撃に関する知識だけでなく，パッチの前提・順序・代替・訂正・競合まで同一の知識グラフに統合し，攻撃と修復の双方の依存関係を統一的に推論可能にする．さらに LLM によるパッチ生成を1回限りのコード生成とせず，修正パターンとその適用条件を再利用可能な知識として蓄積し，形式検証で裏付ける．
+	
+\noindent\textbf{(3) 関連する国内外の研究動向と本研究の位置づけ}
+
+前述の通り本研究では，脆弱性修復に関する統一的なオントロジーに基づいて構築した TRKG に基づき，複数脆弱性に対する連鎖的攻撃も考慮したトリアージを行い，LLM と形式検証による正しさが保証された修正パッチを作成し，それらの間の関係も考慮して修復計画を生成することが特徴である．
+
+そこで関連する国内外の研究動向について，本研究との違いを，本研究が扱う各要素技術と対象に関する比較を通じて，表~\ref{tab:comparison} のように明らかにした．
+\begin{table}
+  \centering
+  \caption{関連する国内外の研究動向と本研究の位置づけ；``$\surd\surd$'' は主要な技術・対象として，``$\surd$'' は副次的な技術・対象として，扱っていることを表す．}
+  \label{tab:comparison}
+  \begin{tabular}{|l|l|l|l|l|l|l|l|}\hline
+    研究 & 攻撃 & 複数 & 複数 & オント & トリ & パッチ & 形式\\
+    & 経路 & 脆弱性 & パッチ & ロジー & アージ & 生成 & 検証\\\hline\hline
+    VulRG~\cite{jiang2025vulrgmultilevelexplainablevulnerability} & $\surd\surd$ & $\surd$ & × & × & $\surd\surd$ & × & ×\\\hline
+    FSE 2026 & $\surd\surd$ & $\surd\surd$ & × & $\surd$ & $\surd$ & × & ×\\
+    SBOM Chain~\cite{10.1145/3803437.3805583} &&&&&&&\\\hline
+    SHIP~\cite{10.1109/ASE63991.2025.00087} & × & × & $\surd\surd$ & × & × & × & ×\\\hline
+    DISPATCH~\cite{308048} & × & × & $\surd$ & × & × & × & ×\\\hline
+    CVE-TTP & $\surd$ & $\surd$ & × & $\surd\surd$ & × & × & ×\\
+    KG~\cite{yadav2026cvettpkgknowledgegraph}&&&&&&&\\\hline
+    ANCHOR~\cite{kim2026schemaagnosticknowledgegraphconstruction} & × & × & × & $\surd\surd$ & × & × & ×\\\hline
+    KeaRepair~\cite{cao2026knowledgeenhancedagenticvulnerabilityrepair} & × & × & × & $\surd$ & × & $\surd\surd$ & $\surd$\\\hline
+    ADAPT~\cite{SAAD2026104436} & × & $\surd\surd$ & × & × & × & × & ×\\\hline
+    ASE 2025~\cite{11334567} & × & $\surd\surd$ & $\surd\surd$ & × & × & × & ×\\\hline
+    chConn~\cite{11097865} & $\surd\surd$ & $\surd\surd$ & × & × & $\surd$ & × & ×\\\hline
+    VulReaD~\cite{mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability} & × & × & × & $\surd\surd$ & × & × & ×\\\hline
+    Self-Healing~\cite{11081727} & × & × & × & × & × & $\surd\surd$ & $\surd\surd$\\\hline
+    \textbf{本研究} & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$\\\hline
+  \end{tabular}
+\end{table}
+この表に示す通り，本研究が扱う個々の要素技術と対象については，近年急速に研究が進められている．一方本研究は，オントロジーと知識グラフを十分に活用し，複数の脆弱性と攻撃手段に対し，それらの関係性を考慮して適切なトリアージを行う．その上で形式検証も活用し，修正パッチの自動生成を，やはりそれらの間の関係を考慮しながら行い，コストとリスクの適切なバランスをとった修正計画を生成することにより，重大な攻撃を確実に遮断することを目指す．さらに効率的な修正のために，修正パターンの作成と適用を行うことが独自の特徴である．
+
+\noindent\textbf{(4)本研究で何をどのように、どこまで明らかにしようとするのか}
+
+本研究の各実施項目の詳細は次の通りである．
+
+\noindent\textbf{サブテーマ1：トリアージパッチ知識グラフの構築（主担当：田原，副担当：）} 本サブテーマでは，トリアージに必要な
+
+\noindent\textbf{サブテーマ2：知識グラフ型トリアージ推論の確立（主担当：田原，副担当：）} 本サブテーマでは，
+
+\noindent\textbf{サブテーマ3：知識グラフと修正パターンを用いた，効率的な証明付きパッチの生成（主担当：田原，副担当：）} 本サブテーマでは，
+
+\noindent\textbf{サブテーマ4：すべての重大な攻撃経路を遮断することが検証可能な，最小かつ十分な修復計画の，説明可能な形での生成（主担当：田原，副担当：）} 本サブテーマでは，
+
+\noindent\textbf{サブテーマ5：大量脆弱性修正プラットフォームの確立（主担当：田原，副担当：）} 本サブテーマでは，
+
+\noindent\textbf{本研究の進め方} サブテーマ1〜4については，令和9年度には (1) サブテーマ1については
+サブテーマ5については，令和12年度には最終的な実験・評価を行い，プラットフォームと評価結果を公開する．
+
+\noindent\textbf{(5) 本研究の目的を達成するための準備状況}
+
+「2 応募者の研究遂行能力及び研究環境」に示した研究業績を踏まえた上で，前述した参考文献を含めた関連する先行研究の調査や，必要な設備の選定などの準備を進めている．
+
+またベンチマークとして，
+
+\noindent\textbf{(6) 本研究がどのような国際性を有するか}
+
+研究代表者と研究分担者はこれまでに，世界的に一流の研究者が発表の場としている海外論文誌と国際会議において，多数の業績を発表している．本研究の成果もそのような場で継続的に発表することにより，当該分野における世界の研究をけん引できるものと考える．
+\begin{figure}[h]
+\centering
+%\includegraphics[width=\textwidth]{figs/schedule}
+\caption{本研究の進め方}
+\label{fig:schedule}
+\end{figure}
+
+\noindent 参考文献：
+\vspace*{-.2\baselineskip}
+\begin{enumerate}
+  \setlength{\parskip}{.5mm} % 段落間
+  \setlength{\itemsep}{.5mm} % 項目間
+\bibitem{jiang2025vulrgmultilevelexplainablevulnerability}
+Y.~Jiang, N.~Oo, Q.~Meng, H.~W. Lim, and B.~Sikdar.
+\newblock VulRG: Multi-level explainable vulnerability patch ranking for
+  complex systems using graphs, arXiv:2502.11143, 2025.
+
+\bibitem{10.1145/3803437.3805583}
+L.~Baird and A.~Moin.
+\newblock Towards predicting multi-vulnerability attack chains in software
+  supply chains from software bill of materials graphs.
+\newblock In {\em Proc. of {FSE} 2026 Companion}, pages
+  1336--13402026.
+
+\bibitem{10.1109/ASE63991.2025.00087}
+Y.~Song, D.~Xie, L.~Xu, H.~Zhang, C.~Zhou, and X.~Xie.
+\newblock Not every patch is an island: Llm-enhanced identification of multiple
+  vulnerability patches.
+\newblock In {\em Proc. of {ASE} 2025}, pages 996--1007, 2025.
+
+\bibitem{308048}
+S.~Sun, Y.~Xing, X.~Wang, S.~Wang, Q.~Li, and K.~Sun.
+\newblock {DISPATCH}: Unraveling security patches from entangled code changes.
+\newblock In {\em Proc. of {USENIX} Security 2025}, pages 4521--4540, 2025.
+
+\bibitem{yadav2026cvettpkgknowledgegraph}
+S.~Yadav, D.~R. Arikkat, B.~Agarwal, S.~Nicolazzo, A.~Nocera, and P.~Vinod.
+\newblock CVE-TTP KG: Knowledge graph linking software vulnerabilities to
+  attack behaviors, arXiv:2606.31557, 2026.
+
+\bibitem{kim2026schemaagnosticknowledgegraphconstruction}
+S.~Kim, J.~Kim, D.~Kang, D.~Kim, and I.~Lee.
+\newblock Schema-agnostic knowledge graph construction via hybrid ontology
+  discovery for cyber threat intelligence, arXiv:2606.01208, 2026.
+
+\bibitem{cao2026knowledgeenhancedagenticvulnerabilityrepair}
+S.~Cao, H.~Ma, L.~Yu, K.~Ding, X.~Liu, T.~Y. Zhuo, B.~Wang, X.~Lin, X.~Sun,
+  L.~Wang, and D.~Lo.
+\newblock Knowledge-enhanced agentic vulnerability repair, arXiv:2607.00820, 2026.
+
+\bibitem{SAAD2026104436}
+U.~Sa’ad, W.~Na, N.-N. Dao, and S.~Cho.
+\newblock Dynamic dependency-aware vulnerability and patch management for
+  critical interconnected systems.
+\newblock {\em Journal of Network and Computer Applications}, 248(104436),
+  2026.
+
+\bibitem{11334567}
+O.~I. Al-Bataineh.
+\newblock Interaction-aware patch assessment for multi-fault automated program
+  repair.
+\newblock In {\em Proc. of {ASE} 2025}, pages 3799--3803, 2025.
+
+\bibitem{11097865}
+Y.~Zhang, M.~Ward, and H.~Nguyen.
+\newblock { Rethinking Attack Path Management: A New Metric for Choke Points in
+  Attack Graphs }.
+\newblock In {\em Proc. of {CSF} 2025}, pages 205--2192025.
+
+\bibitem{mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability}
+S.~Mukhtar, Y.~Yao, Z.~Sun, M.~Mustafa, Y.~S. Ong, and Y.~Sun.
+\newblock VulReaD: Knowledge-graph-guided software vulnerability reasoning and
+  detection, arXiv:2602.10787, 2026.
+
+\bibitem{11081727}
+N.~Tihanyi, Y.~Charalambous, R.~Jain, M.~A. Ferrag, and L.~C. Cordeiro.
+\newblock { A New Era in Software Security: Towards Self-Healing Software via
+  Large Language Models and Formal Verification }.
+\newblock In {\em Proc. of {AST} 2025}, pages 136--147, 2025.
+  % \vspace*{-.5\baselineskip}
+\end{enumerate}
+%end 研究目的と研究計画	 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+\input{pieces/p01_purpose_plan_01}
+
+%#Split: 02_abilities  
+%#PieceName: p02_abilities
+\input{pieces/p02_abilities_00}
+\section{２　応募者の研究遂行能力及び研究環境}
+%　　　　＜＜最大　2ページ＞＞
+
+% s14_abilities
+\PapersInstructions		% <-- 留意事項。これは消すか、コメントアウトしてください。
+%begin 応募者の研究遂行能力及び研究環境 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	応募者は過去20年間、７つの海を隅から隅まで航海し、
+	浅瀬から深海まで潜り、文字通り東西南北上下の３次元で
+	シロナガスクジラの卵の探索を行ってきた(業績\ref{pub:whale})。
+	シロナガスクジラに飲み込まれそうになったり、海賊に捕まるなどの危険な目にも
+	あったが、それにもめげず、研究を遂行してきた強靭な能力を有する。
+
+	シロナガスクジラの卵を探すために用いていたソナーと双眼鏡、及び
+	シロナガスクジラの卵を引き上げるために用意していた大きな網は、
+	そのまま使える。
+%end 応募者の研究遂行能力及び研究環境 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+%begin 研究業績リスト ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	\begin{enumerate}
+		\paper{Search for whale eggs}{\yukawa\ \etal}{Rev.\ Oceanic Mysteries}{888}{99}{2017}
+			\label{pub:whale}
+				
+		\paper{Theory of Elephant Eggs}{\yukawa, Kara Juzo \etal}{\prl}{800}{800-804}{2005}
+			\label{pub:theoegg}
+				
+		\paper{仔象は死んだ}{Kobo Abe}{安部公房全集}{26}{100-200}{2004}
+		
+		\paper{The Elephant's Child (象の鼻はなぜ長い)}{R.~Kipling}{Nature}{999}{777-799}{2003}
+
+		\paper{You can't Lay an Egg If You're an Elephant}{F.~Ehrlich}
+			{JofUR\\({\tt www.universalrejection.org})}{{\bf N/A}}{2002}
+		
+		% 下のように書いてもいいけど、めんどくさいし、表示の仕方を変えようとしたら大変。
+		\item ``Egg of Elephant-Bird'', 
+				\underline{A.~Cooper},
+				Nature, {\bf 409}, 704-707 (2001).	% 	
+		\input{jack_pub}	% << only for demonstration. Please delete it or comment it out.
+	\end{enumerate}
+%end 研究業績リスト ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+\input{pieces/p02_abilities_01}
+
+%#Split: 03_rights  
+%#PieceName: p03_rights
+\input{pieces/p03_rights_00}
+\section{３　人権の保護及び法令等の遵守への対応}
+%　　　　＜＜最大　1ページ＞＞
+
+% s09_rights
+%begin 人権の保護及び法令等の遵守への対応 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	象の卵のES細胞の培養、象のクローンの生成などは行わない。
+
+	\LaTeX の便利な機能については、\texttt{egg\_***.tex} や\texttt{sample\_pdf/egg\_***.pdf}をご覧ください。
+%end 人権の保護及び法令等の遵守への対応 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+\input{pieces/p03_rights_01}
+
+%#Split: 04_final_year  
+%#PieceName: p04_final_year
+\input{pieces/p04_final_year_00}
+\section{４　研究計画最終年度前年度応募を行う場合の記述事項}
+%　　　　＜＜最大　1ページ＞＞
+
+%s04_prep_finalyear
+% 2020-08-16: Taku: Adjusted the horizontal position of the tabular.
+%begin 最終年度の研究課題　＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+\newcommand{\最終年度研究種目名}{基盤研究（Z）}
+\newcommand{\最終年度研究課題番号}{99999}
+\newcommand{\最終年度研究課題名}{シロナガスクジラの卵はなぜ見つけられないのか}
+\newcommand{\最終年度研究期間}{令和？？年度〜令和\一年目 年度}
+%end 最終年度の研究課題　＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+\input{pieces/p04_final_year_01}
+
+\noindent
+\textbf{当初研究計画及び研究成果}\\
+%begin 研究計画最終年度の応募の計画と成果 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	研究課題の通り、シロナガスクジラの卵は見つけられなかった。
+%end 研究計画最終年度の応募の計画と成果 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+\\
+
+\noindent
+\textbf{前年度応募する理由}\\
+%begin 研究計画最終年度の応募の理由 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	一刻も早く次の研究に移りたいので。
+%end 研究計画最終年度の応募の理由 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+\input{pieces/p04_final_year_02}
+
+%#Split: 99_tail
+\input{pieces/hook9} % pieces
+\end{document}
+
