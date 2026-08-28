@@ -159,34 +159,7 @@
 	
 \noindent\textbf{(3) 関連する国内外の研究動向と本研究の位置づけ}
 
-前述の通り本研究では，脆弱性修正に関する統一的なオントロジーに基づいて構築した TRKG に基づき，複数脆弱性に対する連鎖的攻撃も考慮したトリアージを行い，LLM と形式検証による正しさが保証された修正パッチを作成し，それらの間の関係も考慮して修正計画を生成することが特徴である．
-
-そこで関連する国内外の研究動向について，本研究との違いを，本研究が扱う各要素技術と対象に関する比較を通じて，表~\ref{tab:comparison} のように明らかにした．
-\begin{table}
-  \centering
-  \caption{関連する国内外の研究動向と本研究の位置づけ；``$\surd\surd$'' は主要な技術・対象として，``$\surd$'' は副次的な技術・対象として，扱っていることを表す．}
-  \label{tab:comparison}
-  \begin{tabular}{|l|l|l|l|l|l|l|l|}\hline
-    研究 & 攻撃 & 複数 & 複数 & オント & トリ & パッチ & 形式\\
-    & 経路 & 脆弱性 & パッチ & ロジー & アージ & 生成 & 検証\\\hline\hline
-    VulRG~\cite{jiang2025vulrgmultilevelexplainablevulnerability} & $\surd\surd$ & $\surd$ & × & × & $\surd\surd$ & × & ×\\\hline
-    FSE 2026 & $\surd\surd$ & $\surd\surd$ & × & $\surd$ & $\surd$ & × & ×\\
-    SBOM Chain~\cite{10.1145/3803437.3805583} &&&&&&&\\\hline
-    SHIP~\cite{10.1109/ASE63991.2025.00087} & × & × & $\surd\surd$ & × & × & × & ×\\\hline
-    DISPATCH~\cite{308048} & × & × & $\surd$ & × & × & × & ×\\\hline
-    CVE-TTP & $\surd$ & $\surd$ & × & $\surd\surd$ & × & × & ×\\
-    KG~\cite{yadav2026cvettpkgknowledgegraph}&&&&&&&\\\hline
-    ANCHOR~\cite{kim2026schemaagnosticknowledgegraphconstruction} & × & × & × & $\surd\surd$ & × & × & ×\\\hline
-    KeaRepair~\cite{cao2026knowledgeenhancedagenticvulnerabilityrepair} & × & × & × & $\surd$ & × & $\surd\surd$ & $\surd$\\\hline
-    ADAPT~\cite{SAAD2026104436} & × & $\surd\surd$ & × & × & × & × & ×\\\hline
-    ASE 2025~\cite{11334567} & × & $\surd\surd$ & $\surd\surd$ & × & × & × & ×\\\hline
-    chConn~\cite{11097865} & $\surd\surd$ & $\surd\surd$ & × & × & $\surd$ & × & ×\\\hline
-    VulReaD~\cite{mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability} & × & × & × & $\surd\surd$ & × & × & ×\\\hline
-    Self-Healing~\cite{11081727} & × & × & × & × & × & $\surd\surd$ & $\surd\surd$\\\hline
-    \textbf{本研究} & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$ & $\surd\surd$\\\hline
-  \end{tabular}
-\end{table}
-この表に示す通り，本研究が扱う個々の要素技術と対象については，近年急速に研究が進められているが，本研究は前述した独自性によりこれらの研究に対する優位性を持っていると言える．
+前述の通り本研究では，脆弱性修正に関する統一的なオントロジーに基づいて構築した TRKG に基づき，複数脆弱性に対する連鎖的攻撃も考慮したトリアージを行い，LLM と形式検証による正しさが保証された修正パッチを作成し，それらの間の関係も考慮して修正計画を生成することが特徴である．一方，オントロジーと知識グラフを用いた脆弱性対策~\cite{10.1145/3803437.3805583,yadav2026cvettpkgknowledgegraph,kim2026schemaagnosticknowledgegraphconstruction,cao2026knowledgeenhancedagenticvulnerabilityrepair,mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability}，複数脆弱性にまたがる連鎖的攻撃を考慮したトリアージ~\cite{jiang2025vulrgmultilevelexplainablevulnerability,11081727,yadav2026cvettpkgknowledgegraph,11097865}，LLM と形式検証を用いた修正パッチの作成~\cite{cao2026knowledgeenhancedagenticvulnerabilityrepair,11081727}，および複数の修正パッチ間の関係の扱い~\cite{10.1109/ASE63991.2025.00087,308048,11334567}に関し，個別に扱っている研究は，それぞれ示したように存在する．しかし本研究が扱う個々の要素技術と対象については，近年急速に研究が進められているが，本研究は前述した独自性によりこれらの研究に対する優位性を持っていると言える．
 
 \noindent\textbf{(4)本研究で何をどのように、どこまで明らかにしようとするのか}
 
