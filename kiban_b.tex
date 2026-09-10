@@ -107,19 +107,21 @@
 
 \noindent\textbf{(1)本研究の学術的背景や本研究の着想に至った経緯、研究課題の核心をなす学術的「問い」}
 
-\textbf{[背景]} 近年の\ul{大規模言語モデル（LLM）}の急速な性能向上は，利便性と引き換えに\ul{セキュリティ上の重大な問題}をもたらしつつある．たとえば最新版に近い LLM である Claude Mythos 5 は，既存のソフトウェアにおける数千件の高重大度脆弱性を，短時間で自動的に発見し，さらに攻撃コードまで作成したことが報告されている．加えて単独の脆弱性だけでなく，複数の軽微な脆弱性への\ul{連鎖的な攻撃}により，高度な権限の取得という重大なインシデントを誘発可能であることも実証された．
+\textbf{[背景]} 近年の\ul{大規模言語モデル（LLM）}の急速な性能向上は，利便性と引き換えに\ul{セキュリティ上の重大な問題}をもたらしつつある．たとえば Anthropic 社と Cloudflare 社の報告\\
+（\texttt{https://red.anthropic.com/2026/cvd/}, \texttt{https://blog.cloudflare.com/ja-jp/}\\
+\texttt{cyber-frontier-models/}）によると，Anthropic 社が開発した LLM である Claude Mythos Preview は，既存のソフトウェアにおける数千件の高重大度脆弱性を，短時間で自動的に発見し，さらに攻撃コードまで作成したことが報告されている．加えて単独の脆弱性だけでなく，複数の軽微な脆弱性への\ul{連鎖的な攻撃}により，高度な権限の取得という重大なインシデントを誘発可能であることも実証された．
 
 これに対し現状では，モデルの公開範囲を制限するという，一時的な対策が取られている．ただし理想的には，すべての脆弱性を精査し，攻撃手段を確実に遮断するための修正コード，いわゆるパッチを作成して適用することが望ましいが，コスト的に非現実的である．そこで現実的には次の各課題を考慮した上で，対策を取る必要がある．
 
 まず各脆弱性は，攻撃を受けた際の\ul{リスクの度合いの幅が大きい}．また LLM が「発見した」とされる脆弱性は，実際には到達不能，あるいは既存の防御で無害なため，修正が不要なものもある．また深刻度が高くても外部から到達困難な脆弱性より，評価上は中程度でも実際に悪用される可能性が高いものを先に修正すべき場合がある．さらにそもそも脆弱ではない箇所を誤検出することも多い．このような脆弱性の\ul{修正の要不要の判断}，および\ul{優先順位付け}を行う必要がある．
 
-\ul{連鎖的攻撃}に対しては，関係する個々の脆弱性を修正するだけでなく，一部の脆弱性の修正で連鎖を遮断できる場合や，逆に連鎖における後続の脆弱性と攻撃にも対応が必要な場合の考慮が必要である．たとえば3つの軽微な脆弱性 A，B，C があり，A と B の両方への攻撃が成功した場合に限り C への攻撃が可能となり，重大なインシデントにつながるものとする．この場合 A と B いずれか一方を修正すれば，この連鎖的攻撃を遮断できる．一方で A と B いずれか一方への攻撃の成功が前提条件である場合は，両方の修正が必要である．
+\ul{連鎖的攻撃}に対しては，関係する個々の脆弱性を修正するだけでなく，一部の脆弱性の修正で連鎖を遮断できる場合（このような脆弱性を「チョークポイント」と呼ぶ）や，逆に連鎖における後続の脆弱性と攻撃にも対応が必要な場合の考慮が必要である．たとえば3つの軽微な脆弱性 A，B，C があり，A と B の両方への攻撃が成功した場合に限り C への攻撃が可能となり，重大なインシデントにつながるものとする．さらに C よりも A と B の修正コストが低いとすると，A と B いずれか一方を修正すれば，軽微なコストでこの連鎖的攻撃を遮断できる．一方で A と B いずれか一方への攻撃の成功が前提条件である場合は，A と B の両方を修正するコストと，C を修正するコストの比較を行う必要がある．
 
 \ul{パッチは脆弱性を塞ぐだけでなく}、既存機能、性能、OS や外部ライブラリなどとの互換性、および可用性を壊さないことまで要求される．またパッチが新たな脆弱性を生む可能性もある．これに対し，テストは既知の攻撃例を防げることは示せても、すべての変種や未知の経路が存在しないことまでは通常証明できない．
 
   なおプログラムの正しさを数学的に厳密に定義し検証する\ul{形式手法}が知られている．そして LLM と形式手法の併用により，高信頼なプログラム修正を目指した研究も進められている．しかし形式検証はテストに比べて\ul{コストがかかる}ため，大量な脆弱性への適用は非現実的である．
 
-\textbf{[本研究の着想に至った経緯]} 応募者はこれまでに，ソフトウェア工学と形式検証技術の応用として，ソフトウェア脆弱性の検出と，セキュリティの厳密な保証を行うという研究成果を挙げてきた．しかし最新 LLM により検出される大量のソフトウェア脆弱性への対策という点では，前述の問題点を認識した．そこで LLM 応用技術，知識グラフ技術，およびニューロシンボリック技術という，研究組織の強みの活用により，それらの問題点の解決を諮るという，本研究の着想に至った次第である．
+\textbf{[本研究の着想に至った経緯]} 応募者はこれまでに，ソフトウェア工学と形式検証技術の応用として，ソフトウェア脆弱性の検出と，セキュリティの厳密な保証を行うという研究成果を挙げてきた．しかし最新 LLM により検出される大量のソフトウェア脆弱性への対策という点では，前述の問題点を認識した．そこで LLM 応用技術，知識グラフ技術，およびニューロシンボリック技術という，研究組織の強みの活用により，それらの問題点の解決を図るという，本研究の着想に至った次第である．
 
 \textbf{[問い]} そこで本研究では，大量の脆弱性と攻撃手段に対し，LLMと形式検証によるパッチの生成において，どの脆弱性をどのような順序で修正し，また類似脆弱性に対する証明付きパッチの合成・再利用も行うことで，重大攻撃経路の遮断保証を維持しつつ，全パッチの生成・検証コストをどこまで削減できるか，という問いを立てる．そのために脆弱性の\ul{トリアージ（優先順序付け）}と，脆弱性間，攻撃手段間，およびパッチ間の\ul{関係性}も含め，判断根拠を明確にし，\ul{低コストで修正の正しさを保証}することを目指す．具体的には次の各「問い」の解決を目指すものとする．
 
@@ -129,9 +131,9 @@
 
 また課題2で述べた\ul{連鎖的な攻撃}への対応については，従来のトリアージのように単に脆弱性の間の優先順位だけではなく，\ul{脆弱性間の関係}として，関わるコード間の呼び出し関係，攻撃の実行順序，あるいは攻撃による権限昇格の詳細なども考慮しなければならない．その上で適切な脆弱性の絞り込みや，修正順序も含めた修正計画の生成が必要である．
 
-\textbf{問い2：トリアージに基づいて選定された脆弱性に対するパッチを，可能な限り正しさが保証した上で効率的に生成できるか}
+\textbf{問い2：トリアージに基づいて選定された脆弱性に対するパッチを，可能な限り正しさを保証した上で効率的に生成できるか}
 
-課題3に関し，個別の脆弱性については，LLM と形式検証器とのフィードバックループにより，正しいパッチを作成する技術は確立されている．しかし LLM の信頼性の低さと，形式検証の計算コストの課題により，トリアージにより絞り込まれたとしても，なお大量の脆弱性を\ul{すべて修正するのは非現実的}である．そのため，たとえば\ul{複数の類似した脆弱性}については，1件パッチを生成できれば，パッチの合成・再利用により，その他の脆弱性すべてについて同様に低コストで修正する，などの対応が必要である．
+課題3に関し，個別の脆弱性については，LLM と形式検証器とのフィードバックループにより，指定された安全性条件を満たすパッチを生成する手法が提案されている．しかし LLM の信頼性の低さと，形式検証の計算コストの課題により，トリアージにより絞り込まれたとしても，なお大量の脆弱性を\ul{すべて修正するのは非現実的}である．そのため，たとえば\ul{複数の類似した脆弱性}については，1件パッチを生成できれば，パッチの合成・再利用により，その他の脆弱性すべてについて同様に低コストで修正する，などの対応が必要である．
 
 \textbf{問い3：複数パッチの関係性を明確にした上で，重大な攻撃を確実に遮断するために必要な修正計画を生成できるか}
 
@@ -147,19 +149,19 @@
 
 \textbf{目標3：修正計画生成} 問い3の解決のために，TRKG を用いて，すべての重大な攻撃経路を遮断することが検証可能な，最小かつ十分な修正計画を生成する．
 
-\textbf{[学術的独自性]} 本研究の独自性は次の通りである．まず目標Aについては，トリアージに関する研究として文献~\cite{10.1145/3803437.3805583,11097865}があり，特に\cite{10.1145/3803437.3805583}はオントロジに基づいて，ソフトウェア部品表（Software Bill of Materials）上の複数の脆弱性に関する連鎖的攻撃を予測する．しかし当文献は部品レベルの依存関係しか考慮していない．一方で本研究は，最先端 LLM が発見するような，コードレベルでの依存関係が問題となる脆弱性への対応を目指す．
+\textbf{[学術的独自性]} 本研究の独自性は次の通りである．まず目標1については，トリアージに関する研究として文献~\cite{10.1145/3803437.3805583,11097865}があり，特に\cite{10.1145/3803437.3805583}はオントロジーに基づいて，ソフトウェア部品表（Software Bill of Materials）上の複数の脆弱性に関する連鎖的攻撃を予測する．しかし当文献は部品レベルの依存関係しか考慮していない．一方で本研究は，最先端 LLM が発見するような，コードレベルでの依存関係が問題となる脆弱性への対応を目指す．
 
-次に目標Bについては，これまでに個別の脆弱性とパッチについて，形式検証により正しさを保証する研究は多数ある．しかし複数の類似した脆弱性について，修正パターンにより一括的にパッチ生成・検証を行う研究は存在しない．
+次に目標2については，これまでに個別の脆弱性とパッチについて，形式検証により正しさを保証する研究は多数ある．一方本研究では，複数の類似した脆弱性について，修正パターンにより一括的にパッチ生成・検証を行うことにより，形式検証のコストの問題の解決を図る．
 
-最後に目標Cについては，オントロジと知識グラフを用いて修正計画を生成する研究は存在しない．
+最後に目標3については，本研究では，既存研究で行われてきたような，オントロジーと知識グラフのトリアージ推論への利用だけでなく，修正計画の生成への利用も目指す．
 
-以上により3つの研究目標それぞれについて，オントロジ，知識グラフ，および修正パターンに基づいて，大量の脆弱性に対して正しさが保証されたパッチと修正計画を，効率的に生成することを目指す点が，本研究の独自性である．
+以上により3つの研究目標それぞれについて，オントロジー，知識グラフ，および修正パターンに基づいて，大量の脆弱性に対して正しさが保証されたパッチと修正計画を，効率的に生成することを目指す点が，本研究の独自性である．
 
-\textbf{[創造性]} 本研究の創造性は次の通りである．まずトリアージについて，個別脆弱性の重大度評価だけでなく，複数脆弱性が構成する攻撃経路上の役割も考慮して行う．次に攻撃に関する知識だけでなく，パッチの前提・順序・代替・訂正・競合まで同一の知識グラフに統合し，攻撃と修正の双方の依存関係を統一的に推論可能にする．さらに LLM によるパッチ生成を1回限りのコード生成とせず，修正パターンとその適用条件を再利用可能な知識として蓄積し，形式検証で裏付ける．
+\textbf{[創造性]} 本研究の創造性は次の通りである．まずトリアージについて，個別脆弱性の重大度評価だけでなく，複数脆弱性が構成する攻撃経路上の役割も考慮して行う．次に攻撃に関する知識だけでなく，パッチの前提・順序・代替・競合まで同一の知識グラフに統合し，攻撃と修正の双方の依存関係を統一的に推論可能にする．さらに LLM によるパッチ生成を1回限りのコード生成とせず，修正パターンとその適用条件を再利用可能な知識として蓄積し，形式検証で裏付ける．
 	
 \noindent\textbf{(3) 関連する国内外の研究動向と本研究の位置づけ}
 
-前述の通り本研究では，脆弱性修正に関する統一的なオントロジーに基づいて構築した TRKG に基づき，複数脆弱性に対する連鎖的攻撃も考慮したトリアージを行い，LLM と形式検証による正しさが保証されたパッチを作成し，それらの間の関係も考慮して修正計画を生成することが特徴である．一方，オントロジーと知識グラフを用いた脆弱性対策~\cite{10.1145/3803437.3805583,mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability}，複数脆弱性にまたがる連鎖的攻撃を考慮したトリアージ~\cite{11081727,11097865}，LLM と形式検証を用いたパッチの作成~\cite{11081727}，および複数のパッチ間の関係の扱い~\cite{308048}に関し，個別に扱っている研究は，それぞれ示したように存在する．一方本研究は前述した独自性により，これらの研究に対する優位性を持っていると言える．
+前述の通り本研究では，脆弱性修正に関する統一的なオントロジーに基づいて構築した TRKG に基づき，複数脆弱性に対する連鎖的攻撃も考慮したトリアージを行い，LLM と形式検証による正しさが保証されたパッチを作成し，それらの間の関係も考慮して修正計画を生成することが特徴である．一方，オントロジーと知識グラフを用いた脆弱性対策~\cite{10.1145/3803437.3805583,mukhtar2026vulreadknowledgegraphguidedsoftwarevulnerability}，複数脆弱性にまたがる連鎖的攻撃を考慮したトリアージ~\cite{10.1145/3803437.3805583,11097865}，LLM と形式検証を用いたパッチの作成~\cite{11081727}，および複数のパッチ間の関係の扱い~\cite{308048}に関し，個別に扱っている研究は，それぞれ示したように存在する．一方本研究は前述した独自性により，これらの研究に対する優位性を持っていると言える．
 
 \noindent\textbf{(4)本研究で何をどのように、どこまで明らかにしようとするのか}
 
@@ -248,22 +250,24 @@ N.~Tihanyi, Y.~Charalambous, R.~Jain, M.~A. Ferrag, and L.~C. Cordeiro.
 %\PapersInstructions		% <-- 留意事項。これは消すか、コメントアウトしてください。
 %begin 応募者の研究遂行能力及び研究環境 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
+\noindent\textbf{(1) これまでの研究活動（主要な研究業績を含む）}
+
 応募者はこれまでに，必要な基盤技術に関し日本で最先端の成果を挙げている．以下に，各基盤技術の詳細を示す．
 
-\noindent \textbf{ソフトウェア工学技術：}田原，清，鄭は，ソフトウェア工学技術の分野で，重要な成果を挙げている（研究業績\ref{tahara25}, \ref{tei25}, \ref{tei24-2}, \ref{tei24-1}, \ref{tei23}, \ref{tahara17}, \ref{tahara10}）．
+\noindent \textbf{ソフトウェア工学技術：}田原，清，鄭は，ソフトウェア工学技術の分野で，重要な成果を挙げている（研究業績\ref{tei26}, \ref{tahara26}, \ref{tei24-2}, \ref{tei24-1}, \ref{tei23}, \ref{tahara17}, \ref{tahara10}）．
 
-\noindent \textbf{形式検証技術：}田原，清，石川，鄭は形式検証技術の分野で，重要な成果を挙げている（研究業績\ref{tei23}, \ref{sei23}, \ref{sei19}, \ref{tahara17}, \ref{tahara10}）．
+\noindent \textbf{形式検証技術：}田原，石川，鄭は形式検証技術の分野で，重要な成果を挙げている（研究業績\ref{ishikawa24}, \ref{tei23}, \ref{tahara17}, \ref{tahara10}）．
 
-研究業績\ref{tei23}では，リフレクションと呼ばれる枠組みにおいて，モデル検査による検証手法を提案している．\ul{本業績はソフトウェア工学のトップジャーナルの1つである IEEE TSE}
-\ul{（impact factor=6.28）に掲載され，これにより情報処理学会ソフトウェア工学研究会卓越研究賞を受賞したものである．}
+研究業績\ref{tei23}では，リフレクションと呼ばれる枠組みにおいて，モデル検査による検証手法を提案している．\ul{本業績はソフトウェア工学のトップジャーナルの1つである IEEE TSE（impact}\\
+\ul{factor=6.28）に掲載され，これにより情報処理学会ソフトウェア工学研究会卓越研究賞を受賞したものである．}
 
-\noindent \textbf{LLM 応用技術：}田原，清，鄭は，LLM 応用技術の分野で，重要な成果を挙げている（研究業績\ref{tei24-1}, \ref{tei24-3}）．
+\noindent \textbf{LLM 応用技術：}田原，清，鄭，江上は，LLM 応用技術の分野で，重要な成果を挙げている（研究業績\ref{sei26}, \ref{tei24-1}）．
 
-なお研究業績\ref{inoue25}, \ref{tei24-2}, \ref{tei24-1}, \ref{tei24-3}, \ref{inoue24}, \ref{inoue22-2}は，国際共同研究の結果としての成果である．
+\noindent \textbf{知識グラフ技術：}江上は，知識グラフ技術の分野で，重要な成果を挙げている（研究業績\ref{egami26}）．
 
-\noindent \textbf{知識グラフ技術：}江上は，知識グラフ技術の分野で，重要な成果を挙げている（研究業績）．
+\noindent \textbf{ニューロシンボリック技術：}井上は，ニューロシンボリック技術の分野で，重要な成果を挙げている（研究業績\ref{inoue25}, \ref{inoue24}, \ref{inoue23}, \ref{inoue22-2}）．いずれも \ul{AI や機械学習の分野の世界トップレベルのジャーナルと国際会議で発表されたものである}．
 
-\noindent \textbf{ニューロシンボリック技術：}井上は，機械学習技術の分野で，重要な成果を挙げている（研究業績\ref{inoue25}, \ref{inoue24}, \ref{inoue23}, \ref{inoue22-2}）．いずれも \ul{AI や機械学習の分野の世界トップレベルのジャーナルと国際会議で発表されたものである}．
+なお研究業績\ref{tei26}, \ref{inoue25}, \ref{tei24-2}, \ref{tei24-1}, \ref{inoue24}, \ref{sei23}, \ref{inoue22-2}は，国際共同研究の結果としての成果である．
 
 また清は、電子情報通信学会AI研究会の委員長やIEEE CS Japan Chapter幹事を務め，研究代表者として科研費・若手(A)，基盤(A)，JSTさきがけ等においてセキュリティ・プライバシと機械学習の融合領域における研究を行ってきた．筆頭著者としてIEEE論文誌に10編採録され，セキュリティトップ会議IEEE S\&P 2025 (Core rank A*)に採択されているほか，機械学習のトップ会議IJCAI (Core rank A*)のPC Boardを務めている．
 
@@ -283,71 +287,76 @@ N.~Tihanyi, Y.~Charalambous, R.~Jain, M.~A. Ferrag, and L.~C. Cordeiro.
 \vspace*{\baselineskip}
 
 研究業績：
-	\begin{enumerate}
-  \item\label{tahara25}
-    Toward a Pattern-based Comprehensive Framework using Process Mining for RBAC Conformance Checks.
-    \setulsep{0pt} Duc-Hieu Nguyen, \ul{Yuichi Sei}, \uc{Yasuyuki Tahara} and Akihiko Ohsuga.
-    \emph{IJSEKE}, Vol.35, No.2, pp.157-194, 2025（査読有）(IF=0.60).
+\begin{enumerate}
+\item\label{sei26} Addressing Prompt Injection in Large Language Models via In-Context Learning.
+  \setulsep{0pt} Go Sato, \ul{Shusaku Egami}, \uc{Yasuyuki Tahara}, Akihiko Ohsuga, \ul{Yuichi Sei}.
+  \emph{Computers, Materials \& Continua}, Vol. 87, No. 2, 37 pages, 2026（査読有）（IF=2.4）.
 
-\item\label{tei25}
-  Multi-Grained Guaranteeable Requirement Analysis for Iterative Adaptation.
-  \setulsep{0pt} Jialong Li, Takuto Yamauchi, Takanori Hirano, Jinyu Cai, and \ul{Kenji Tei}.
-  {\em IEICE Trans. Info. \& Syst.}., 2025, Volume E108.D, Issue 4, pp. 360--370, 2024（査読有）(IF=0.59)（国際共著）.
+\item\label{tei26} SAGE: Semantic-Aware Gray-Box Game Regression Testing with Large Language Models.
+  \setulsep{0pt} Jinyu Cai, Jialong Li, Nianyu Li, Zhenyu Mao, Mingyue Zhang, \ul{Kenji Tei}.
+  \emph{ASE Journal}, Vol. 33, No. 102, pp. 1--39, 2026（査読有）(IF=3.9)（国際共著）.
+
+\item\label{tahara26} Model-driven approach enabling formalization and conformance testing of attribute-based access control policies for business processes.
+  \setulsep{0pt} Duc-Hieu Nguyen, \ul{Yuichi Sei}, \uc{Yasuyuki Tahara} and Akihiko Ohsuga.
+  \emph{J. of Comp. Sec.}, Vol.34, Issue 4, pp. 261--300, 2026（査読有）(IF=1.3).
+
+\item\label{egami26} HOME-KGQA: A Benchmark Dataset for Multimodal Knowledge Graph Question Answering on Household Daily Activities.
+  \setulsep{0pt} \ul{Shusaku Egami}, Aoi Ohta, Tomoki Tsujimura, Masaki Asada, Tatsuya Ishigaki, Ken Fukuda, Masahiro Hamasaki, Hiroya Takamura.
+  \emph{LREC 2026}, pp. 7845--7856, 2026（査読有）(Core rank=B).
 
 \item\label{inoue25} Iterated Belief Change as Learning.
-  \setulsep{0pt} Nicolas Schwind, \ul{Katsumi Inoue}, S\'{e}bastien Konieczny, Pierre Marquis
-	{\em IJCAI 2025}, 2025（査読有）(Core rank=A*)（国際共著）.
+  \setulsep{0pt} Nicolas Schwind, \ul{Katsumi Inoue}, S\'{e}bastien Konieczny, Pierre Marquis.
+  {\em IJCAI 2025}, 2025（査読有）(Core rank=A*)（国際共著）.
 
-	\item\label{tei24-2}
-	Generative AI for self-adaptive systems: State of the art and research roadmap.
-	\setulsep{0pt} Jialong Li, Mingyue Zhang, Nianyu Li, Danny Weyns, Zhi Jin, and \ul{Kenji Tei}.
-	{\em ACM Trans. Auton. Adapt. Syst.}, 2024（査読有）(IF=2.61)（国際共著）.
+\item\label{ishikawa24} Repairing Event-B Models through Quantifier Elimination.
+  \setulsep{0pt} Tsutomu Kobayashi,\\
+  \ul{Fuyuki Ishikawa}.
+  \emph{ICFEM 2024}, pp. 18--36, 2024（査読有）(Core rank=C).
 
-	\item\label{tei24-1} Exploring the potential of large language models in self-adaptive systems.
-          \setulsep{0pt} Jialong Li, Mingyue Zhang, Nianyu Li, Danny Weyns, Zhi Jin, and \ul{Kenji Tei}.
-	{\em {SEAMS} 2024}, pp. 77--83,  2024（査読有）(Core rank=A)（国際共著）.
-	
-	\item\label{tei24-3}
-	Multi-role consensus through LLMs discussions for vulnerability detection.
-	\setulsep{0pt} Zhenyu Mao, Jialong Li, Dongming Jin, Munan Li, and \ul{Kenji Tei}.
-	{\em QRS 2024}, 2024（査読有）(Core rank=C)（国際共著）.
+\item\label{tei24-2} Generative AI for self-adaptive systems: State of the art and research roadmap.
+  \setulsep{0pt} Jialong Li, Mingyue Zhang, Nianyu Li, Danny Weyns, Zhi Jin, and \ul{Kenji Tei}.
+  {\em ACM Trans. Auton. Adapt. Syst.}, pp. 1--60, 2024（査読有）(IF=2.61)（国際共著）.
 
-	\item\label{inoue24}
-	A differentiable first-order rule learner for inductive logic programming.
-	\setulsep{0pt} Kun Gao, \ul{Katsumi Inoue}, Yongzhi Cao, and Hanpin Wang.
-	{\em Artificial Intelligence}, Vol. 331, No. 104108,  2024（査読有）(IF=5.1)（国際共著）.
-					  
-	\item\label{sei23} Privacy-Preserving Collaborative Data Collection and Analysis with Many Missing Values.
-          \setulsep{0pt} \ul{Y. Sei}, J.A. Onesimu, H. Okumura, A. Ohsuga.
-	IEEE Trans. Dependable and Secure Computing, vol. 20, no. 3, pp. 2158--2173, 2023（船井学術賞受賞, IPSJ/IEEE CS Young Computer Researcher Award）（国際共著）.
+\item\label{tei24-1} Exploring the potential of large language models in self-adaptive systems.
+  \setulsep{0pt} Jialong Li, Mingyue Zhang, Nianyu Li, Danny Weyns, Zhi Jin, and \ul{Kenji Tei}.
+  {\em {SEAMS} 2024}, pp. 77--83,  2024（査読有）(Core rank=A)（国際共著）.
 
-	\item\label{tei23} Towards scalable model checking of reflective systems via labeled transition systems.
-    \setulsep{0pt} K.~Tei, \uc{Y.~Tahara}, and A.~Ohsuga.
-    {\em IEEE Trans. on Softw. Eng.}, vol. 49, no. 3, pp. 1299--1322, doi:10.1109/TSE.2022.3174408, 2023（査読有）(IF=7.4).
+\item\label{inoue24} A differentiable first-order rule learner for inductive logic programming.
+  \setulsep{0pt} Kun Gao,\\
+  \ul{Katsumi Inoue}, Yongzhi Cao, and Hanpin Wang.
+  {\em Artificial Intelligence}, Vol. 331, Article 104108, 2024（査読有）(IF=5.1)（国際共著）.
+  
+\item\label{sei23} Privacy-Preserving Collaborative Data Collection and Analysis with Many Missing Values.
+  \setulsep{0pt} \ul{Yuichi Sei}, J. Andrew Onesimu, Hiroshi Okumura, Akihiko Ohsuga.
+  \emph{IEEE Trans. Dependable and Secure Computing}, Vol. 20, No. 3, pp. 2158--2173, 2023（査読有）（船井学術賞受賞, IPSJ/IEEE CS Young Computer Researcher Award）（国際共著）.
 
-	\item\label{inoue23}
-	Differentiable learning of matricized DNFs and its application to boolean networks.
-	\setulsep{0pt} Taisuke Sato and \ul{Katsumi Inoue}.
-	{\em Machine Learning}, Vol. 112, No.~8, pp. 2821--2843, 2023（査読有）(IF=4.3)（国際共著）.
+\item\label{tei23} Towards scalable model checking of reflective systems via labeled transition systems.
+  \setulsep{0pt} Kenji Tei, \uc{Yasuyuki Tahara}, and Akihiko Ohsuga.
+  {\em IEEE Trans. on Softw. Eng.}, vol. 49, no. 3, pp. 1299--1322, 2023（査読有）(IF=6.28).
 
-	\item\label{inoue22-2}
-	Learning from interpretation transition using differentiable logic programming semantics.
-	\setulsep{0pt} Kun Gao, Hanpin Wang, Yongzhi Cao, and \ul{Katsumi Inoue}.
-	{\em Machine Learning}, Vol. 111, No.~1, pp. 123--145, 2022（査読有）(IF=4.3)（国際共著）.
-			  
-	\item\label{sei19} Anonymization of Sensitive Quasi-Identifiers for l-diversity and t-closeness.
-          \setulsep{0pt} Y. Sei, H. Okumura, T. Takenouchi, A. Ohsuga.
-	IEEE Trans. Dependable and Secure Computing, vol. 16, no. 4, pp. 580--593, 2019 (IEEE CS Japan Chapter Young Author Award).
+\item\label{inoue23}
+  Differentiable learning of matricized DNFs and its application to boolean networks.
+  \setulsep{0pt} Taisuke Sato and \ul{Katsumi Inoue}.
+  {\em Machine Learning}, Vol. 112, No.~8, pp. 2821--2843, 2023（査読有）(IF=4.3)（国際共著）.
 
-	\item\label{tahara17} Formal Verification of Dynamic Evolution Processes of UML Models Using Aspects.
-          \setulsep{0pt} \setulsep{0pt} \uc{Y. Tahara}, A. Ohsuga, S. Honiden.
-    {\em SEAMS 2017}, pp.152--162, 2017（査読有）.
+\item\label{inoue22-2}
+  Learning from interpretation transition using differentiable logic programming semantics.
+  \setulsep{0pt} Kun Gao, Hanpin Wang, Yongzhi Cao, and \ul{Katsumi Inoue}.
+  {\em Machine Learning}, Vol. 111, No.~1, pp. 123--145, 2022（査読有）(IF=4.3)（国際共著）.
+  
+\item\label{sei19} Anonymization of Sensitive Quasi-Identifiers for l-diversity and t-closeness.\\
+  \ul{Yuichi Sei}, Hiroshi Okumura, Takao Takenouchi, Akihiko Ohsuga.
+  \emph{IEEE Trans. Dependable and Secure Computing}, vol. 16, no. 4, pp. 580--593, 2019（査読有）（IEEE CS Japan Chapter Young Author Award）.
 
-	\item\label{tahara10} Rewriting Logic Model of Compositional Abstraction of Aspect-Oriented Software.
-    \setulsep{0pt} \uc{Y. Tahara}, A.~Ohsuga, and S. Honiden.
-    {\em FOAL 2010}, \url{http://www.eecs.ucf.edu/FOAL/papers-2010/Tahara-etal.pdf}, 2010（査読有）.
+\item\label{tahara17} Formal Verification of Dynamic Evolution Processes of UML Models Using Aspects.\\
+  \uc{Yasuyuki Tahara}, Akihiko Ohsuga, Shinichi Honiden.
+  {\em SEAMS 2017}, pp.152--162, 2017（査読有）.
 
-	\end{enumerate}
+\item\label{tahara10} Rewriting Logic Model of Compositional Abstraction of Aspect-Oriented Software.\\
+  \uc{Yasuyuki Tahara}, Akihiko Ohsuga, and Shinichi Honiden.
+  {\em FOAL 2010}, \url{https://www.cs.ucf.edu/~leavens/FOAL/papers-2010/Tahara-etal.pdf}, 2010（査読有）.
+
+\end{enumerate}
 %end 研究業績リスト ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 \input{pieces/p02_abilities_01}
@@ -360,7 +369,11 @@ N.~Tihanyi, Y.~Charalambous, R.~Jain, M.~A. Ferrag, and L.~C. Cordeiro.
 
 % s09_rights
 %begin 人権の保護及び法令等の遵守への対応 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-本研究では，研究開始前に電気通信大学「ヒトを対象とする実験に関する倫理委員会」の倫理審査を受け，適切な同意取得プロセスを確立する．研究代表者の田原は，ソフトウェア工学に関する研究を主に行っており，本倫理審査の承認を受けた研究を実施している（管理番号：22090）．
+本研究では，研究開始前に電気通信大学「ヒトを対象とする実験に関する倫理委員会」の倫理審査を受け，被験者に本研究の成果を評価してもらう際の適切な同意取得プロセスを確立する．研究代表者の田原は，ソフトウェア工学に関する研究を主に行っており，本倫理審査の承認を受けた研究を実施している（管理番号：22090）．
+
+また本研究は隔離された実験環境で行い，第三者システムへの無断アクセスは行わない．そして外部 LLM 使用時は公開されたソースコードや脆弱性情報のみ入力する．さらに新規脆弱性を発見した場合は，経済産業省の告示（\texttt{http://www.meti.go.jp/policy/netsecurity/}\\
+\texttt{vul\_notification.pdf}）に基づき策定された，情報セキュリティ早期警戒パートナーシップガイドライン（\texttt{https://www.ipa.go.jp/security/guide/vuln/ug65p90000019by0-att/}\\
+\texttt{partnership\_guideline.pdf}）に則った対応を行う．
 %end 人権の保護及び法令等の遵守への対応 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 \input{pieces/p03_rights_01}
@@ -374,24 +387,23 @@ N.~Tihanyi, Y.~Charalambous, R.~Jain, M.~A. Ferrag, and L.~C. Cordeiro.
 %s04_prep_finalyear
 % 2020-08-16: Taku: Adjusted the horizontal position of the tabular.
 %begin 最終年度の研究課題　＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-\newcommand{\最終年度研究種目名}{基盤研究（Z）}
-\newcommand{\最終年度研究課題番号}{99999}
-\newcommand{\最終年度研究課題名}{シロナガスクジラの卵はなぜ見つけられないのか}
-\newcommand{\最終年度研究期間}{令和？？年度〜令和\一年目 年度}
+\newcommand{\最終年度研究種目名}{}
+\newcommand{\最終年度研究課題番号}{}
+\newcommand{\最終年度研究課題名}{}
+\newcommand{\最終年度研究期間}{令和　年度〜令和\一年目 年度}
 %end 最終年度の研究課題　＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 \input{pieces/p04_final_year_01}
 
 \noindent
 \textbf{当初研究計画及び研究成果}\\
 %begin 研究計画最終年度の応募の計画と成果 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	研究課題の通り、シロナガスクジラの卵は見つけられなかった。
+
 %end 研究計画最終年度の応募の計画と成果 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-\\
 
 \noindent
 \textbf{前年度応募する理由}\\
 %begin 研究計画最終年度の応募の理由 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	一刻も早く次の研究に移りたいので。
+
 %end 研究計画最終年度の応募の理由 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 \input{pieces/p04_final_year_02}
